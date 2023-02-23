@@ -5,5 +5,10 @@
 
 
 #result {
-  padding: 5%;
+  padding-left: 5%;
+}
+
+
+h3.a {
+  white-space: pre;
 }
