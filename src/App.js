@@ -1,22 +1,25 @@
 import './App.css';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 // this is the text file below
 import raw from './words2.txt';
+// import Input from '@mui/material/Input';
+import Button from '@mui/material/Button';
+import { TextField } from '@mui/material';
 
 
 
 export default function App() {
 
-  const [char, setChar] = useState();
+  const charRef = useRef();
+  
+  const [result, setResult] = useState('');
 
-  const [updated, setUpdated] = useState(char);
-
-  const handleChange = (event) => {
-    setChar(event.target.value);
-  };
+  // const handleChange = (event) => {
+  //   setChar(event.target.value);
+  // };
   
   let results;
-  // Here is where I'm able to console.log the words in the text file
+  // Here is where I'm able to pull the words in the text file
     fetch(raw) 
     .then(r => r.text())
     .then(text => {
@@ -25,12 +28,14 @@ export default function App() {
   
 
   // This is the output where when the user clicks it will return the text
-  function handleClick() {
+  function handleClick(e) {
+    e.preventDefault()
+    console.log(charRef)
     let words = results.split("\n");
-    
+    console.log(charRef.current.value.length)
     let l = []
-    for (let i = 0; i < char.length; i++) {
-      l.push(char[i])
+    for (let i = 0; i < charRef.current.value.length; i++) {
+      l.push(charRef.current.value[i])
     }
     
     let d = [];
@@ -81,25 +86,36 @@ export default function App() {
     }
     
     console.log(text)
-    setUpdated(document.getElementById("result").innerHTML = text);
+    const result = text
+    setResult(result);
 
-    }
-    
+    };
+
   
   return (
-    <><div className="App">
-      <h1>Anagram Solver</h1>
-      <h5>Enter your letters below</h5>
-      <input type="text"
-                    id="message"
-                    name="message"
-                    onChange={handleChange}
-                    value={char}>
-      </input><button onClick={handleClick}>submit</button>
+    <>
+    
+    <div className="App">
+      <form onSubmit={handleClick}>
+        <div className='title'>
+          <h1 id='the_title'>Anagram Solver</h1>
+          <h1 id='about'>?</h1>
+        </div>
+        <h5>Enter 6 letters below to find all the word combinations you can make!</h5>
+        <h5>i.e. sradob</h5>
+        <div className='answer'>
+        {/* <Input defaultValue="Hello world" inputRef={inputsRef} /> */}
+        {/* <input inputRef={charRef}></input> */}
+        <TextField id="user_guess"  variant="standard" inputRef={charRef} />
+        {/* <Button variant="contained" id='submit_button'>Submit</Button> */}
+        <button>Submit</button>
+        </div>
+      </form>
     </div>
     <div>
-      <h3 class="a" id="result">{updated}</h3>
+      <h3 class="a" id="result">{result}</h3>
     </div>
+    
     </>
   );
 }
